@@ -1,0 +1,8 @@
+.git
+.gitignore
+*.md
+*.exe
+*.log
+.gitkeep
+Dockerfile
+.dockerignore
