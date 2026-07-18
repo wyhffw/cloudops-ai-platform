@@ -7,6 +7,7 @@ Enterprise cloud-native operations platform based on Kubernetes, Go, and AI Agen
 - `frontend/` — Vue 3 + Element Plus
 - `backend/` — Go (Gin) API
 - `k8s/` — Kubernetes manifests (GitOps)
+- `ansible/` — 两节点 kubeadm 集群安装剧本
 - `.github/workflows/` — GitHub Actions CI/CD
 
 ## Backend (quick start)

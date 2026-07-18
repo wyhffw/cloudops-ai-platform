@@ -1,0 +1,19 @@
+---
+- name: Check if already joined
+  stat:
+    path: /etc/kubernetes/kubelet.conf
+  register: kubelet_conf
+
+- name: Read join command from controller
+  slurp:
+    src: "{{ playbook_dir }}/.k8s-join.sh"
+  register: join_cmd_b64
+  delegate_to: localhost
+  become: false
+  when: not kubelet_conf.stat.exists
+
+- name: Join worker to cluster
+  command: "{{ join_cmd_b64.content | b64decode | trim }}"
+  args:
+    creates: /etc/kubernetes/kubelet.conf
+  when: not kubelet_conf.stat.exists

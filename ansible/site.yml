@@ -1,0 +1,24 @@
+---
+# 用法（在 master 上）:
+#   cd /opt/cloudops-ai-platform/ansible   # 或你的路径
+#   ansible-playbook site.yml
+
+- name: Prepare all Kubernetes nodes
+  hosts: k8s
+  become: true
+  roles:
+    - common
+    - containerd
+    - kubernetes
+
+- name: Initialize control plane
+  hosts: masters
+  become: true
+  roles:
+    - master
+
+- name: Join workers
+  hosts: workers
+  become: true
+  roles:
+    - worker

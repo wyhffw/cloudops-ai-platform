@@ -1,0 +1,17 @@
+# Kubernetes
+k8s_version: "1.29"
+# 留空则安装仓库里最新的 1.29.x；若要钉死版本可写成 "1.29.6-1.1"
+k8s_package_version: ""
+pod_cidr: "10.244.0.0/16"
+service_cidr: "10.96.0.0/12"
+control_plane_endpoint: "192.168.1.20"
+
+# Calico
+calico_version: "v3.28.1"
+calico_manifest_url: "https://raw.githubusercontent.com/projectcalico/calico/{{ calico_version }}/manifests/calico.yaml"
+
+# 基础
+timezone: "Asia/Shanghai"
+apt_mirror: "https://mirrors.aliyun.com/ubuntu"
+k8s_apt_mirror: "https://mirrors.aliyun.com/kubernetes-new/core/stable/v{{ k8s_version }}/deb"
+docker_apt_mirror: "https://mirrors.aliyun.com/docker-ce/linux/ubuntu"

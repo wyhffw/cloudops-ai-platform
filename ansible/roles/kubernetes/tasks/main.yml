@@ -1,0 +1,55 @@
+---
+- name: Create keyrings directory
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+
+- name: Add Kubernetes apt GPG key
+  get_url:
+    url: "{{ k8s_apt_mirror }}/Release.key"
+    dest: /etc/apt/keyrings/kubernetes-apt-keyring.asc
+    mode: "0644"
+    force: true
+
+- name: Add Kubernetes apt repository
+  apt_repository:
+    repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] {{ k8s_apt_mirror }}/ /"
+    filename: kubernetes
+    state: present
+
+- name: Install kubelet kubeadm kubectl (pinned)
+  apt:
+    name:
+      - "kubelet={{ k8s_package_version }}"
+      - "kubeadm={{ k8s_package_version }}"
+      - "kubectl={{ k8s_package_version }}"
+    state: present
+    update_cache: true
+    allow_change_held_packages: true
+  when: k8s_package_version | length > 0
+
+- name: Install kubelet kubeadm kubectl (latest in repo)
+  apt:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+    state: present
+    update_cache: true
+    allow_change_held_packages: true
+  when: k8s_package_version | length == 0
+
+- name: Hold Kubernetes packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+    - kubelet
+    - kubeadm
+    - kubectl
+
+- name: Enable kubelet
+  service:
+    name: kubelet
+    enabled: true

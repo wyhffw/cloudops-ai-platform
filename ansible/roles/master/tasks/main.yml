@@ -1,0 +1,68 @@
+---
+- name: Check if cluster already initialized
+  stat:
+    path: /etc/kubernetes/admin.conf
+  register: k8s_admin_conf
+
+- name: Initialize Kubernetes control plane
+  command: >
+    kubeadm init
+    --apiserver-advertise-address={{ control_plane_endpoint }}
+    --pod-network-cidr={{ pod_cidr }}
+    --service-cidr={{ service_cidr }}
+    --cri-socket=unix:///run/containerd/containerd.sock
+  args:
+    creates: /etc/kubernetes/admin.conf
+  when: not k8s_admin_conf.stat.exists
+  register: kubeadm_init
+
+- name: Create kube config directory for root
+  file:
+    path: /root/.kube
+    state: directory
+    mode: "0755"
+
+- name: Copy admin.conf to root kubeconfig
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: /root/.kube/config
+    remote_src: true
+    mode: "0600"
+
+- name: Install Calico CNI
+  command: kubectl apply -f {{ calico_manifest_url }}
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  changed_when: true
+  when: not k8s_admin_conf.stat.exists or kubeadm_init is changed
+
+- name: Wait for node to become Ready
+  command: kubectl get nodes --no-headers
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  register: node_status
+  until: "'Ready' in node_status.stdout"
+  retries: 30
+  delay: 10
+  changed_when: false
+
+- name: Generate join command
+  command: kubeadm token create --print-join-command
+  environment:
+    KUBECONFIG: /etc/kubernetes/admin.conf
+  register: join_command
+  changed_when: false
+
+- name: Save join command on Ansible controller
+  copy:
+    content: "{{ join_command.stdout }}\n"
+    dest: "{{ playbook_dir }}/.k8s-join.sh"
+    mode: "0700"
+  delegate_to: localhost
+  become: false
+
+- name: Also save join command on master for manual use
+  copy:
+    content: "{{ join_command.stdout }}\n"
+    dest: /root/k8s-join.sh
+    mode: "0700"
