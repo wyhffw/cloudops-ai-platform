@@ -4,9 +4,10 @@ kind: Kustomization
 namespace: cloudops
 
 resources:
-  - ../../namespace.yaml
+  - namespace.yaml
   - deployment.yaml
   - service.yaml
+  - ingress.yaml
 
 images:
   - name: ghcr.io/wyhffw/cloudops-backend
