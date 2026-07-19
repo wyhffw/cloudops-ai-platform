@@ -26,7 +26,7 @@ func Load() Config {
 		Addr:       addr,
 		AppName:    "cloudops-backend",
 		Env:        env,
-		Version:    "0.2.0",
+		Version:    "0.3.0",
 		JWTSecret:  envOr("JWT_SECRET", "cloudops-dev-secret-change-me"),
 		JWTExpire:  expire,
 		AdminUser:  envOr("ADMIN_USER", "admin"),

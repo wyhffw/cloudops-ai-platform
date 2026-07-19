@@ -31,9 +31,18 @@ curl -s http://127.0.0.1:8080/api/v1/login \
   -H 'Content-Type: application/json' \
   -d '{"username":"admin","password":"admin123"}'
 
-# list namespaces / pods (replace TOKEN)
+# list namespaces / pods / nodes / deployments (replace TOKEN)
 curl -s http://127.0.0.1:8080/api/v1/namespaces -H "Authorization: Bearer TOKEN"
 curl -s 'http://127.0.0.1:8080/api/v1/pods?namespace=cloudops' -H "Authorization: Bearer TOKEN"
+curl -s http://127.0.0.1:8080/api/v1/nodes -H "Authorization: Bearer TOKEN"
+curl -s 'http://127.0.0.1:8080/api/v1/deployments?namespace=cloudops' -H "Authorization: Bearer TOKEN"
+
+# pod logs / restart / scale
+curl -s 'http://127.0.0.1:8080/api/v1/pods/cloudops/POD_NAME/logs?tail=100' -H "Authorization: Bearer TOKEN"
+curl -s -X POST 'http://127.0.0.1:8080/api/v1/pods/cloudops/POD_NAME/restart' -H "Authorization: Bearer TOKEN"
+curl -s -X POST 'http://127.0.0.1:8080/api/v1/deployments/cloudops/backend/scale' \
+  -H "Authorization: Bearer TOKEN" -H 'Content-Type: application/json' \
+  -d '{"replicas":2}'
 ```
 
 Optional env:
