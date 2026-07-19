@@ -10,7 +10,20 @@ Enterprise cloud-native operations platform based on Kubernetes, Go, and AI Agen
 - `ansible/` — 两节点 kubeadm 集群安装剧本
 - `.github/workflows/` — GitHub Actions CI/CD
 
-## Backend (quick start)
+## Frontend (quick start)
+
+```bash
+# 终端 1：后端
+cd backend && go run ./cmd/server
+
+# 终端 2：前端
+cd frontend
+npm install
+npm run dev
+```
+
+打开 http://127.0.0.1:5173 ，默认账号 `admin` / `admin123`。
+Vite 已把 `/api` 代理到后端 `:8080`。
 
 ```bash
 cd backend

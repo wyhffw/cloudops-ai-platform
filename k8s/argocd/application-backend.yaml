@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/wyhffw/cloudops-ai-platform.git
     targetRevision: main
-    path: k8s/apps/backend
+    path: k8s/apps
   destination:
     server: https://kubernetes.default.svc
     namespace: cloudops

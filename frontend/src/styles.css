@@ -1,0 +1,28 @@
+:root {
+  --ops-bg: #0f1419;
+  --ops-panel: #171d25;
+  --ops-border: #2a3441;
+  --ops-accent: #2dd4bf;
+  --ops-text: #e7eef7;
+  --ops-muted: #8b9bb0;
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: var(--ops-text);
+  background: var(--ops-bg);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  min-height: 100%;
+  background: var(--ops-bg);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

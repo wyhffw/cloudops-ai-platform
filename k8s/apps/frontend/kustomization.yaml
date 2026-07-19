@@ -4,11 +4,8 @@ kind: Kustomization
 namespace: cloudops
 
 resources:
-  - namespace.yaml
-  - rbac.yaml
-  - deployment.yaml
-  - service.yaml
+  - app.yaml
 
 images:
-  - name: ghcr.io/wyhffw/cloudops-backend
+  - name: ghcr.io/wyhffw/cloudops-frontend
     newTag: latest
