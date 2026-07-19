@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cloudops-backend
+  namespace: cloudops
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: cloudops-backend
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces", "pods", "nodes", "services"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets", "statefulsets", "daemonsets"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: cloudops-backend
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cloudops-backend
+subjects:
+  - kind: ServiceAccount
+    name: cloudops-backend
+    namespace: cloudops
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudops-backend
+  namespace: cloudops
+type: Opaque
+stringData:
+  JWT_SECRET: "please-change-me-in-production"
+  ADMIN_USER: "admin"
+  ADMIN_PASSWORD: "admin123"

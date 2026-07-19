@@ -23,10 +23,25 @@ Then open:
 - http://127.0.0.1:8080/healthz
 - http://127.0.0.1:8080/api/v1/info
 
+Auth + cluster APIs (need kubeconfig or in-cluster SA):
+
+```bash
+# login
+curl -s http://127.0.0.1:8080/api/v1/login \
+  -H 'Content-Type: application/json' \
+  -d '{"username":"admin","password":"admin123"}'
+
+# list namespaces / pods (replace TOKEN)
+curl -s http://127.0.0.1:8080/api/v1/namespaces -H "Authorization: Bearer TOKEN"
+curl -s 'http://127.0.0.1:8080/api/v1/pods?namespace=cloudops' -H "Authorization: Bearer TOKEN"
+```
+
 Optional env:
 
 - `ADDR` (default `:8080`)
 - `APP_ENV` (`dev` / `prod`)
+- `JWT_SECRET` / `ADMIN_USER` / `ADMIN_PASSWORD`
+- `KUBECONFIG` (local only; in-cluster uses ServiceAccount)
 
 Build image (needs Docker):
 

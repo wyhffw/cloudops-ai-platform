@@ -17,6 +17,7 @@ spec:
       labels:
         app: backend
     spec:
+      serviceAccountName: cloudops-backend
       containers:
         - name: backend
           image: ghcr.io/wyhffw/cloudops-backend:latest
@@ -29,6 +30,21 @@ spec:
               value: ":8080"
             - name: APP_ENV
               value: "prod"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cloudops-backend
+                  key: JWT_SECRET
+            - name: ADMIN_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cloudops-backend
+                  key: ADMIN_USER
+            - name: ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudops-backend
+                  key: ADMIN_PASSWORD
           readinessProbe:
             httpGet:
               path: /healthz
